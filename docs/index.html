@@ -1,0 +1,2740 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>BankRegReports Python SDK documentation</title>
+        <meta name="description"
+              content="Official Python SDK documentation for the BankRegReports API: regulatory and financial data on every US bank, credit union, and holding company." />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+              rel="stylesheet" />
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+        <style>
+    /* Design tokens */
+    :root {
+      --color-sidebar-bg: #0f172a;
+      --color-sidebar-border: #1e293b;
+      --color-sidebar-text: #94a3b8;
+      --color-sidebar-text-active: #f1f5f9;
+      --color-sidebar-hover: #1e293b;
+      --color-sidebar-active-indicator: #2563eb;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-accent-light: #eff6ff;
+      --color-accent-muted: #dbeafe;
+      --color-bg: #ffffff;
+      --color-surface: #f8fafc;
+      --color-surface-2: #f1f5f9;
+      --color-border: #e2e8f0;
+      --color-text-primary: #0f172a;
+      --color-text-secondary: #475569;
+      --color-text-muted: #64748b;
+      --color-text-code: #0f172a;
+      --color-hero-bg: #0f172a;
+      --color-hero-text: #f1f5f9;
+      --color-success: #059669;
+      --color-warning: #d97706;
+      --color-danger: #dc2626;
+      --color-table-stripe: #f8fafc;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      --sidebar-width: 260px;
+      --navbar-height: 56px;
+      --radius: 6px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    /* Reset & base */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text-primary);
+      background: var(--color-bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; }
+
+    /* Top navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--navbar-height);
+      background: var(--color-sidebar-bg);
+      border-bottom: 1px solid var(--color-sidebar-border);
+      display: flex;
+      align-items: center;
+      padding: 0 1.25rem;
+      z-index: 100;
+      gap: 1rem;
+    }
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      color: #f1f5f9;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .navbar-brand:hover { text-decoration: none; color: #fff; }
+    .navbar-logo {
+      width: 28px;
+      height: 28px;
+      background: var(--color-accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.03em;
+    }
+    .navbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--color-sidebar-border);
+    }
+    .navbar-label {
+      color: var(--color-sidebar-text);
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+    .navbar-spacer { flex: 1; }
+    .navbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .navbar-link {
+      color: var(--color-sidebar-text);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .navbar-link:hover { color: #f1f5f9; text-decoration: none; }
+    .btn-nav {
+      background: var(--color-accent);
+      color: #fff;
+      padding: 0.375rem 0.875rem;
+      border-radius: 5px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .btn-nav:hover { background: var(--color-accent-hover); text-decoration: none; color: #fff; }
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      color: var(--color-sidebar-text);
+      margin-right: 0.25rem;
+    }
+    .hamburger svg { display: block; }
+
+    /* Layout wrapper */
+    .layout {
+      display: flex;
+      margin-top: var(--navbar-height);
+      min-height: calc(100vh - var(--navbar-height));
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--color-sidebar-bg);
+      border-right: 1px solid var(--color-sidebar-border);
+      position: fixed;
+      top: var(--navbar-height);
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 50;
+      padding: 1.5rem 0 2rem;
+      scrollbar-width: thin;
+      scrollbar-color: #334155 transparent;
+      transition: transform 0.25s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+    .sidebar-section {
+      margin-bottom: 0.25rem;
+    }
+    .sidebar-section-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569;
+      padding: 0.5rem 1.25rem 0.375rem;
+      display: block;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 1.25rem;
+      color: var(--color-sidebar-text);
+      font-size: 0.8125rem;
+      font-weight: 400;
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+      line-height: 1.5;
+    }
+    .sidebar-link:hover {
+      background: var(--color-sidebar-hover);
+      color: var(--color-sidebar-text-active);
+      text-decoration: none;
+    }
+    .sidebar-link.active {
+      color: #60a5fa;
+      border-left-color: var(--color-accent);
+      background: rgba(37, 99, 235, 0.08);
+      font-weight: 500;
+    }
+    .sidebar-sub {
+      padding-left: 0.5rem;
+    }
+    .sidebar-sub .sidebar-link {
+      font-size: 0.78125rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      color: #64748b;
+    }
+    .sidebar-sub .sidebar-link.active { color: #60a5fa; }
+    .sidebar-divider {
+      height: 1px;
+      background: var(--color-sidebar-border);
+      margin: 0.75rem 1.25rem;
+    }
+
+    /* Main content */
+    .content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e2d52 50%, #0f172a 100%);
+      padding: 4rem 3rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; max-width: 800px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      color: #93c5fd;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .hero-sub {
+      font-size: 1.125rem;
+      color: #94a3b8;
+      max-width: 600px;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+    .hero-install {
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: var(--radius);
+      padding: 0.875rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      max-width: 400px;
+      margin-bottom: 2rem;
+    }
+    .hero-install .prompt {
+      color: #4ade80;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 500;
+      user-select: none;
+    }
+    .hero-install code {
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      color: #e2e8f0;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .btn-primary {
+      background: var(--color-accent);
+      color: #fff;
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .btn-primary:hover {
+      background: var(--color-accent-hover);
+      text-decoration: none;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: background 0.15s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      text-decoration: none;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Content sections */
+    .doc-section {
+      padding: 3rem 3rem 2.5rem;
+      border-bottom: 1px solid var(--color-border);
+      max-width: 900px;
+    }
+    .doc-section:last-of-type { border-bottom: none; }
+
+    .doc-section h2 {
+      font-size: 1.625rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      padding-top: 0.25rem;
+    }
+    .doc-section h3 {
+      font-size: 1.1875rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      letter-spacing: -0.015em;
+      margin-top: 2.25rem;
+      margin-bottom: 0.625rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .doc-section h3:first-of-type { margin-top: 1.5rem; }
+    .doc-section h4 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+    }
+    .section-intro {
+      color: var(--color-text-secondary);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    /* Code blocks */
+    pre[class*="language-"] {
+      border-radius: var(--radius);
+      margin: 1rem 0;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      border: 1px solid #2d2d2d;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    code[class*="language-"] {
+      font-family: var(--font-mono) !important;
+      font-size: 0.875rem !important;
+    }
+    :not(pre) > code {
+      font-family: var(--font-mono);
+      font-size: 0.84em;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      padding: 0.125em 0.375em;
+      border-radius: 4px;
+      color: #1e40af;
+      white-space: nowrap;
+    }
+
+    /* Install blocks */
+    .install-block {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: var(--radius);
+      padding: 0.875rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      margin: 0.75rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+    .install-block .prompt { color: #4ade80; font-weight: 600; user-select: none; }
+    .install-block code {
+      color: #e2e8f0;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+      white-space: normal;
+    }
+    .install-block code:hover { text-decoration: none; }
+    .install-note {
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      margin: 0.5rem 0 0 0;
+      line-height: 1.6;
+    }
+
+    /* Method entries */
+    .method-group {
+      margin-top: 2rem;
+    }
+    .method-group-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-accent-muted);
+    }
+    .method-entry {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.125rem 1.375rem 1rem;
+      margin-bottom: 0.875rem;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .method-entry:hover {
+      border-color: #bfdbfe;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.05);
+    }
+    .method-signature {
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: 0.4rem;
+      word-break: break-all;
+    }
+    .method-desc {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .method-example pre {
+      margin: 0;
+      font-size: 0.8125rem !important;
+    }
+    .method-example code {
+      font-size: 0.8125rem !important;
+    }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; margin: 1.25rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    thead {
+      background: var(--color-sidebar-bg);
+      color: #94a3b8;
+    }
+    thead th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 2px solid var(--color-sidebar-border);
+    }
+    tbody tr { border-bottom: 1px solid var(--color-border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: var(--color-table-stripe); }
+    tbody td {
+      padding: 0.75rem 1rem;
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    tbody td:first-child { font-weight: 500; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2em 0.6em;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-amber { background: #fef3c7; color: #b45309; }
+    .badge-purple { background: #ede9fe; color: #7c3aed; }
+    .badge-red { background: #fee2e2; color: #b91c1c; }
+    .badge-gray { background: #f1f5f9; color: #475569; }
+
+    /* Callout / info boxes */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 0.875rem;
+      border-left: 4px solid;
+    }
+    .callout-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-body { flex: 1; }
+    .callout-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      margin-bottom: 0.25rem;
+    }
+    .callout-text { font-size: 0.9rem; line-height: 1.65; color: inherit; }
+    .callout.info {
+      background: #eff6ff;
+      border-color: var(--color-accent);
+      color: #1e40af;
+    }
+    .callout.tip {
+      background: #f0fdf4;
+      border-color: #16a34a;
+      color: #14532d;
+    }
+    .callout.warning {
+      background: #fffbeb;
+      border-color: #d97706;
+      color: #78350f;
+    }
+    .callout.swagger {
+      background: #f5f3ff;
+      border-color: #7c3aed;
+      color: #3b0764;
+    }
+
+    /* Exception entries */
+    .exception-entry {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-danger);
+      border-radius: var(--radius);
+      padding: 0.875rem 1.125rem;
+      margin-bottom: 0.625rem;
+    }
+    .exception-name {
+      font-family: var(--font-mono);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: #b91c1c;
+      margin-bottom: 0.25rem;
+    }
+    .exception-meta {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 0.375rem;
+      flex-wrap: wrap;
+    }
+    .exception-status {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: #475569;
+      font-weight: 500;
+    }
+    .exception-desc {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .exception-attr {
+      margin-top: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    .exception-attr code {
+      font-size: 0.8125rem;
+    }
+
+    /* Config param table */
+    .param-name {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-accent);
+    }
+    .param-type {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Swagger callout */
+    .swagger-box {
+      background: linear-gradient(135deg, #f5f3ff 0%, #eff6ff 100%);
+      border: 1px solid #c4b5fd;
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      margin: 1.5rem 0;
+    }
+    .swagger-box h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #4c1d95;
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.015em;
+    }
+    .swagger-box p {
+      color: #3b0764;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+    .btn-swagger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #7c3aed;
+      color: #fff;
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-swagger:hover {
+      background: #6d28d9;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* Anchor headings */
+    .anchor-heading {
+      scroll-margin-top: calc(var(--navbar-height) + 1.5rem);
+    }
+    .section-anchor {
+      scroll-margin-top: calc(var(--navbar-height) + 1.5rem);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--color-sidebar-bg);
+      color: var(--color-sidebar-text);
+      padding: 2.5rem 3rem;
+      margin-left: 0;
+    }
+    .footer-inner {
+      max-width: 900px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .footer-brand {
+      color: #f1f5f9;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .footer-tagline {
+      font-size: 0.8125rem;
+      color: #64748b;
+      line-height: 1.6;
+      max-width: 320px;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem 1.5rem;
+      list-style: none;
+    }
+    .footer-links a {
+      color: #64748b;
+      font-size: 0.8125rem;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: #94a3b8; }
+    .footer-bottom {
+      border-top: 1px solid var(--color-sidebar-border);
+      padding-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy {
+      font-size: 0.8125rem;
+      color: #475569;
+    }
+    .footer-sources {
+      font-size: 0.75rem;
+      color: #475569;
+    }
+
+    /* Sidebar overlay (mobile) */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 40;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .navbar-actions { display: none; }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .sidebar-overlay.active { display: block; }
+
+      .content { margin-left: 0; }
+
+      .hero { padding: 2.5rem 1.5rem 2rem; }
+      .hero h1 { font-size: 1.75rem; }
+      .hero-sub { font-size: 1rem; }
+      .hero-actions { gap: 0.625rem; }
+      .btn-primary, .btn-secondary { font-size: 0.875rem; padding: 0.5rem 1rem; }
+
+      .doc-section { padding: 2rem 1.5rem; }
+      footer { padding: 2rem 1.5rem; }
+      .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.5rem; }
+      .hero-install { max-width: 100%; }
+    }
+
+    /* Utility */
+    .mt-1 { margin-top: 0.375rem; }
+    .mt-2 { margin-top: 0.75rem; }
+    .mt-3 { margin-top: 1.25rem; }
+    .mt-4 { margin-top: 1.75rem; }
+    .mb-1 { margin-bottom: 0.375rem; }
+    .mb-2 { margin-bottom: 0.75rem; }
+    .text-muted { color: var(--color-text-muted); font-size: 0.9rem; }
+    .code-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+        </style>
+    </head>
+    <body>
+        <!-- Top Navbar -->
+        <nav class="navbar">
+            <button class="hamburger"
+                    id="hamburger"
+                    aria-label="Toggle navigation"
+                    aria-expanded="false">
+                <svg width="22"
+                     height="22"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="2">
+                    <path id="ham-icon" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <a class="navbar-brand"
+               href="https://www.bankregreports.com"
+               target="_blank"
+               rel="noopener">
+                <div class="navbar-logo">BRR</div>
+                BankRegReports
+            </a>
+            <div class="navbar-divider"></div>
+            <span class="navbar-label">Python SDK Docs</span>
+            <div class="navbar-spacer"></div>
+            <div class="navbar-actions">
+                <a class="navbar-link"
+                   href="https://api.bankregreports.com/api/v1/docs/"
+                   target="_blank"
+                   rel="noopener">Swagger</a>
+                <a class="navbar-link"
+                   href="https://www.bankregreports.com/api/"
+                   target="_blank"
+                   rel="noopener">API Keys</a>
+                <a class="btn-nav"
+                   href="https://www.bankregreports.com/accounts/signup/"
+                   target="_blank"
+                   rel="noopener">Sign Up</a>
+            </div>
+        </nav>
+        <!-- Sidebar overlay (mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <!-- Layout -->
+        <div class="layout">
+            <!-- Sidebar -->
+            <aside class="sidebar"
+                   id="sidebar"
+                   role="navigation"
+                   aria-label="Documentation navigation">
+                <div class="sidebar-section">
+                    <span class="sidebar-section-label">Getting Started</span>
+                    <a class="sidebar-link" href="#hero" data-section="hero">Overview</a>
+                    <a class="sidebar-link" href="#why" data-section="why">Why BankRegReports</a>
+                    <a class="sidebar-link" href="#quick-start" data-section="quick-start">Quick Start</a>
+                    <a class="sidebar-link" href="#installation" data-section="installation">Installation</a>
+                    <a class="sidebar-link"
+                       href="#authentication"
+                       data-section="authentication">Authentication</a>
+                </div>
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-section">
+                    <span class="sidebar-section-label">API Reference</span>
+                    <a class="sidebar-link"
+                       href="#api-reference"
+                       data-section="api-reference">All Methods</a>
+                    <div class="sidebar-sub">
+                        <a class="sidebar-link" href="#group-banks-directory">Banks: Directory</a>
+                        <a class="sidebar-link" href="#group-banks-financial">Banks: Financials</a>
+                        <a class="sidebar-link" href="#group-banks-structure">Banks: Structure</a>
+                        <a class="sidebar-link" href="#group-banks-scores">Banks: Scores &amp; Peers</a>
+                        <a class="sidebar-link" href="#group-branches">Branches</a>
+                        <a class="sidebar-link" href="#group-risk-compliance">Risk &amp; Compliance</a>
+                        <a class="sidebar-link" href="#group-sec">SEC / EDGAR</a>
+                        <a class="sidebar-link" href="#group-screeners">Screeners</a>
+                        <a class="sidebar-link" href="#group-industry">Industry &amp; Macro</a>
+                        <a class="sidebar-link" href="#group-rates">Rates &amp; Yield Curve</a>
+                        <a class="sidebar-link" href="#group-risk-failures">Risk &amp; Failures</a>
+                        <a class="sidebar-link" href="#group-credit-unions">Credit Unions / NCUA</a>
+                        <a class="sidebar-link" href="#group-bhc">Holding Companies</a>
+                        <a class="sidebar-link" href="#group-watchlist">Watchlist &amp; Alerts</a>
+                        <a class="sidebar-link" href="#group-graphs">Saved Graphs</a>
+                        <a class="sidebar-link" href="#group-reference">Reference &amp; Catalog</a>
+                        <a class="sidebar-link" href="#group-pagination-method">Pagination</a>
+                    </div>
+                </div>
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-section">
+                    <span class="sidebar-section-label">Guides</span>
+                    <a class="sidebar-link"
+                       href="#error-handling"
+                       data-section="error-handling">Error Handling</a>
+                    <a class="sidebar-link" href="#pagination" data-section="pagination">Pagination</a>
+                    <a class="sidebar-link"
+                       href="#configuration"
+                       data-section="configuration">Configuration</a>
+                    <a class="sidebar-link" href="#swagger" data-section="swagger">Swagger / OpenAPI</a>
+                </div>
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-section">
+                    <span class="sidebar-section-label">Resources</span>
+                    <a class="sidebar-link"
+                       href="https://www.bankregreports.com"
+                       target="_blank"
+                       rel="noopener">Main Site</a>
+                    <a class="sidebar-link"
+                       href="https://www.bankregreports.com/api/"
+                       target="_blank"
+                       rel="noopener">Get API Key</a>
+                    <a class="sidebar-link"
+                       href="https://api.bankregreports.com/api/v1/docs/"
+                       target="_blank"
+                       rel="noopener">Swagger UI</a>
+                </div>
+            </aside>
+            <!-- Main content -->
+            <main class="content">
+                <!-- SECTION 1: Hero -->
+                <section id="hero" class="hero section-anchor">
+                    <div class="hero-inner">
+                        <div class="hero-badge">Python SDK</div>
+                        <h1>BankRegReports Python SDK</h1>
+                        <p class="hero-sub">
+                            Clean, validated, cross-source regulatory data on every US bank, credit union, and holding company, at a fraction of the cost of enterprise data platforms. In three lines of Python.
+                        </p>
+                        <div class="hero-install">
+                            <span class="prompt">$</span>
+                            <code>pip install bankregreports</code>
+                        </div>
+                        <div class="hero-actions">
+                            <a class="btn-primary"
+                               href="https://www.bankregreports.com/api/"
+                               target="_blank"
+                               rel="noopener">Get API Key</a>
+                            <a class="btn-secondary"
+                               href="https://api.bankregreports.com/api/v1/docs/"
+                               target="_blank"
+                               rel="noopener">Swagger Docs</a>
+                            <a class="btn-secondary"
+                               href="https://www.bankregreports.com"
+                               target="_blank"
+                               rel="noopener">bankregreports.com</a>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION 1b: Why BankRegReports -->
+                <section id="why" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">Why BankRegReports</h2>
+                    <p class="section-intro">
+                        US bank regulatory data is entirely public. Getting it into a form you can actually
+                        use is a different problem entirely.
+                    </p>
+                    <h3>The problem with "free" regulatory data</h3>
+                    <p>
+                        The US banking system produces an enormous volume of public data. Every federally
+                        insured institution files quarterly Call Reports with more than 2,000 line items.
+                        The UBPR distills those into pre-computed ratios. The NCUA collects equivalent
+                        5300 Call Reports from 4,800+ credit unions. The Federal Reserve maintains
+                        organizational structure and Y-9C holding company filings. The FDIC tracks
+                        branches, failures, and enforcement history. SEC EDGAR contains XBRL financial
+                        facts, insider disclosures, proxy statements, and 8-K event filings for every
+                        publicly registered bank.
+                    </p>
+                    <p style="margin-top:0.75rem;">
+                        <strong>All of it is free. Almost none of it is usable out of the box.</strong>
+                    </p>
+                    <div class="table-wrap" style="margin-top:1.25rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>What you find</th>
+                                    <th>The real problem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Cryptic MDRM codes</strong>
+                                    </td>
+                                    <td>
+                                        Call Report data arrives keyed by codes like <code>RCON2170</code> and <code>RIAD4107</code>. The data dictionary is a separate 400-page PDF. Codes are silently retired across quarters with no changelog in the data.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Unit chaos</strong>
+                                    </td>
+                                    <td>
+                                        Values appear in at least four conventions across sources: whole dollars, thousands of dollars, ratios as decimals, ratios as integers. The NCUA 5300 stores interest rates as integers (×100 basis-point encoding). Miss this and your rate analysis is off by a factor of 100.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Schema drift without notice</strong>
+                                    </td>
+                                    <td>
+                                        The FFIEC adds, removes, and redefines schedules each quarter. A bulk download from Q1 may have different column names, nullability, and value semantics than Q2. No migration guide. No deprecation warning. You find out when the pipeline breaks.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Silent revisions</strong>
+                                    </td>
+                                    <td>
+                                        Institutions refile quarterly. Prior values are silently overwritten in published bulk files. If you downloaded Q3 data in October and again in January, you may have two different values for the same cell with no restatement flag.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>ID fragmentation</strong>
+                                    </td>
+                                    <td>
+                                        A single bank appears under at least four identifiers: Federal Reserve RSSD ID, FDIC certificate number, OCC charter number, and one or more SEC CIK numbers. Joining data across sources requires building and maintaining your own crosswalk, and that crosswalk has gaps.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Calculation mismatches</strong>
+                                    </td>
+                                    <td>
+                                        Computing NIM from raw Call Report data looks simple until you discover the FFIEC uses a specific annualization methodology with an average-earning-assets denominator spread across 12 MDRM items. Getting a number that agrees with the published UBPR (the regulatory benchmark) requires knowing all of it.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 style="margin-top:2rem;">The expensive alternative</h3>
+                    <p>
+                        The financial data industry has known about this problem for decades. The solution
+                        was a class of enterprise providers who do the cleaning internally and resell the
+                        processed result:
+                    </p>
+                    <div class="table-wrap" style="margin-top:1rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Approximate cost</th>
+                                    <th>Access model</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Leading bank data platforms</strong>
+                                    </td>
+                                    <td>$20K–$200K+/year</td>
+                                    <td>Enterprise contract, multi-year</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Financial terminal providers</strong>
+                                    </td>
+                                    <td>$20K–$30K+/seat/year</td>
+                                    <td>Terminal or data feed subscription</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Credit &amp; risk data vendors</strong>
+                                    </td>
+                                    <td>Enterprise pricing</td>
+                                    <td>Sales process required</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Specialized structured finance platforms</strong>
+                                    </td>
+                                    <td>Enterprise pricing</td>
+                                    <td>Opaque quotes, long contracts</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="margin-top:1rem;">
+                        These services solve the problem: the data is clean, the calculations are correct,
+                        the sources are linked. But the pricing was designed for large institutions, rating
+                        agencies, and investment banks. Not for community banks doing their own analysis,
+                        fintech startups building bank-adjacent products, academics studying the banking
+                        system, or analysts who need to answer one question before Friday.
+                    </p>
+                    <p style="margin-top:0.75rem;">
+                        The result is a market with nothing in the middle: raw data that takes months of
+                        engineering to make usable, or enterprise subscriptions that require a procurement
+                        cycle and a budget most organizations can't justify.
+                    </p>
+                    <h3 style="margin-top:2rem;">Why we built this</h3>
+                    <p>
+                        <a href="https://www.bankregreports.com"
+                           target="_blank"
+                           rel="noopener noreferrer">BankRegReports</a>
+                        was built by people who ran into this gap firsthand, tasked with a bank analysis
+                        project and discovering that the only options were to spend months wrestling with
+                        free government bulk files or sign an enterprise contract for access to data that
+                        is, at its origin, entirely public.
+                    </p>
+                    <p style="margin-top:0.75rem;">
+                        The team behind BankRegReports has been in ALCO. Been through regulatory exams.
+                        Built bank models, constructed liquidity stress tests, sat in credit review
+                        committees, and done the kind of analysis that examiners and board members ask for.
+                        We knew what the data was supposed to look like and what the calculations were
+                        supposed to produce. Getting from a raw Call Report download to a defensible ROA
+                        calculation required solving a dozen intermediate problems that no one had
+                        documented clearly.
+                    </p>
+                    <p style="margin-top:0.75rem;">
+                        So we built the platform we needed. Everything the data industry has known was
+                        missing: the quality and accuracy of enterprise data products, delivered through a
+                        modern REST API with a Python SDK that returns pandas DataFrames, at a price point
+                        that makes bank regulatory data accessible to anyone who needs it.
+                    </p>
+                    <h3 style="margin-top:2rem;">What we do differently</h3>
+                    <div class="table-wrap" style="margin-top:1rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Problem in raw sources</th>
+                                    <th>What BankRegReports does</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Four competing institution IDs across sources</td>
+                                    <td>
+                                        Every institution resolved to a single RSSD ID hub. FDIC cert, OCC charter, NCUA charter, and SEC CIK all linked and crosswalked.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Four unit conventions, no labels</td>
+                                    <td>
+                                        All values normalized: dollar amounts in thousands, ratios as percentages (8.0 = 8%), dates as ISO 8601, columns as human-readable snake_case.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Calculations that don't match the UBPR</td>
+                                    <td>
+                                        All derived metrics validated against FFIEC published UBPR values, the regulatory benchmark. Methodology published openly at <a href="https://www.bankregreports.com"
+    target="_blank"
+    rel="noopener noreferrer">bankregreports.com</a>.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Silent restatements overwriting prior values</td>
+                                    <td>Amendments tracked, restatement history exposed. You know when a number changed and why.</td>
+                                </tr>
+                                <tr>
+                                    <td>Sources never linked to each other natively</td>
+                                    <td>FFIEC + FDIC + NIC + Y-9C + NCUA + SEC EDGAR all joined in one query via the RSSD crosswalk.</td>
+                                </tr>
+                                <tr>
+                                    <td>No analytical layer on top of the data</td>
+                                    <td>
+                                        CAMELS-style scoring, ML failure prediction (with feature attribution), M&amp;A target scoring, CECL reserve modeling, deposit beta analysis, built by practitioners who understand what the analysis is actually for.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>No developer access without a sales call</td>
+                                    <td>
+                                        <code>pip install bankregreports</code> and you're pulling data in minutes. Free tier available, no enterprise contract required.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout tip" style="margin-top:2rem;">
+                        <strong>Built by practitioners, for practitioners.</strong> If you've been in ALCO,
+                        been through a regulatory exam, or had to defend a capital ratio to an examiner,
+                        you'll recognize the data. If you're approaching bank analysis for the first time,
+                        we've done the work of understanding what each number means so you don't have to
+                        build that context from scratch.
+                        <br />
+                        <br />
+                        <a href="https://www.bankregreports.com/api/"
+                           target="_blank"
+                           rel="noopener noreferrer">Get an API key →</a>
+                    </div>
+                </section>
+                <!-- SECTION 2: Quick Start -->
+                <section id="quick-start" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">Quick Start</h2>
+                    <p class="section-intro">Three lines to pull CET1 ratios for every Georgia bank above $500M in assets.</p>
+                    <pre><code class="language-python">import bankregreports
+brr = bankregreports.BankReg("brr_xxx")   # or set BANKREG_API_TOKEN env var
+df  = brr.screener(state="GA", min_assets=500_000)
+print(df[["legal_name", "total_assets", "cet1_ratio"]].head(10))</code></pre>
+                    <h3>Line by line</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Line</th>
+                                    <th>What it does</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <code>import bankregreports</code>
+                                    </td>
+                                    <td>Imports the SDK package. All public classes and helpers are exposed at the top-level namespace.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code>BankReg("brr_xxx")</code>
+                                    </td>
+                                    <td>
+                                        Creates an authenticated client. Pass your API token directly or omit it to read from the <code>BANKREG_API_TOKEN</code> environment variable.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code>brr.screener(...)</code>
+                                    </td>
+                                    <td>
+                                        Queries the screener endpoint with the given filters and returns a pandas DataFrame (or list of dicts if pandas is not installed).
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code>df[...].head(10)</code>
+                                    </td>
+                                    <td>Standard pandas column selection and row limit. Works identically to any other DataFrame.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <!-- SECTION 3: Installation -->
+                <section id="installation" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">Installation</h2>
+                    <p class="section-intro">
+                        The SDK requires Python 3.10 or later. The only mandatory runtime dependency is <code>requests</code>.
+                    </p>
+                    <h3>Core install</h3>
+                    <div class="install-block">
+                        <span class="prompt">$</span>
+                        <code>pip install bankregreports</code>
+                    </div>
+                    <p class="install-note">
+                        Installs the SDK with its single hard dependency (<code>requests&gt;=2.28</code>). List-returning methods return <code>list[dict]</code>.
+                    </p>
+                    <h3>With pandas integration</h3>
+                    <div class="install-block">
+                        <span class="prompt">$</span>
+                        <code>pip install "bankregreports[pandas]"</code>
+                    </div>
+                    <p class="install-note">
+                        Adds <code>pandas</code> as a dependency and enables automatic DataFrame output from all list-returning methods. The <code>pandas</code> extra is recommended for interactive analysis in Jupyter notebooks or any workflow that uses DataFrame operations.
+                    </p>
+                    <h3>Virtual environment (recommended)</h3>
+                    <div class="install-block">
+                        <span class="prompt">$</span>
+                        <code>python -m venv .venv &amp;&amp; source .venv/bin/activate &amp;&amp; pip install "bankregreports[pandas]"</code>
+                    </div>
+                    <div class="callout tip mt-3">
+                        <div class="callout-icon">&#x2713;</div>
+                        <div class="callout-body">
+                            <div class="callout-title">Output format</div>
+                            <div class="callout-text">
+                                List-returning methods return a <code>pandas.DataFrame</code> by default, which needs the <code>pandas</code> extra. Pass <code>as_dataframe=False</code> to any method to get the decoded JSON instead, with no pandas dependency.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION 4: Authentication -->
+                <section id="authentication" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">Authentication</h2>
+                    <p class="section-intro">
+                        All authenticated endpoints use bearer token authentication. Tokens are prefixed <code>brr_</code> and are issued per account at <a href="https://www.bankregreports.com/api/"
+    target="_blank"
+    rel="noopener">bankregreports.com/api/</a>.
+                    </p>
+                    <h3>Method 1: Constructor argument</h3>
+                    <pre><code class="language-python">import bankregreports
+brr = bankregreports.BankReg("brr_xxx")</code></pre>
+                    <h3>Method 2: Environment variable</h3>
+                    <pre><code class="language-python">import os
+import bankregreports
+
+# Set in your shell or .env file:
+# export BANKREG_API_TOKEN=brr_xxx
+
+brr = bankregreports.BankReg()   # reads BANKREG_API_TOKEN automatically</code></pre>
+                    <div class="callout info mt-3">
+                        <div class="callout-icon">&#9432;</div>
+                        <div class="callout-body">
+                            <div class="callout-title">Security recommendation</div>
+                            <div class="callout-text">
+                                Never hard-code tokens in source files that are committed to version control. Use environment variables, a secrets manager, or a <code>.env</code> file that is listed in <code>.gitignore</code>.
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Subscription tiers</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tier</th>
+                                    <th>Rate Limit</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-gray">Public</span>
+                                    </td>
+                                    <td>10 req/min</td>
+                                    <td>
+                                        No authentication required. Limited to <code>/healthz</code> and catalog endpoints only.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-blue">Free</span>
+                                    </td>
+                                    <td>60 req/min</td>
+                                    <td>
+                                        Requires a <code>brr_...</code> token. Bank directory, basic search, and reference data.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-green">Pro</span>
+                                    </td>
+                                    <td>600 req/min</td>
+                                    <td>Full financial data, screeners, SEC filings, ML predictions, and scores.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-purple">Enterprise</span>
+                                    </td>
+                                    <td>Custom SLA</td>
+                                    <td>Bulk export, all data domains, priority support, and custom rate limits.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <!-- SECTION 5: API Reference -->
+                <section id="api-reference" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">API Reference</h2>
+                    <p class="section-intro">
+                        All methods are called on a <code>BankReg</code> client instance. RSSD 37 (Bank of Hancock County) is used as the example institution throughout this reference; JPMorgan Chase Bank is RSSD 852218.
+                    </p>
+                    <!-- GROUP: Banks: Directory & Snapshot -->
+                    <div id="group-banks-directory" class="method-group section-anchor">
+                        <div class="method-group-label">Banks: Directory &amp; Snapshot</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_search_index()</div>
+                            <div class="method-desc">
+                                Returns the full directory of all FDIC-insured banks. Each record includes institution name, RSSD ID, FDIC certificate number, state, and asset tier classification.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">df = brr.bank_search_index()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns a complete snapshot of a single bank: financials, capital ratios, asset quality metrics, earnings data, and peer context in a single response.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">snap = brr.bank(rssd_id=37)  # Bank of Hancock County</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_trends(rssd_id, quarters=12)</div>
+                            <div class="method-desc">
+                                Returns the quarterly time series of the bank's key metrics, one row per quarter. Defaults to the last 12 quarters.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">trends = brr.bank_trends(rssd_id=37, quarters=8)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_deep_dive(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the full regulatory financial profile of a bank, covering capital adequacy, liquidity ratios, asset quality indicators, and earnings metrics in depth.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">deep = brr.bank_deep_dive(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_profile(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns identity and organizational data for a bank: charter class, regulatory agency, executive officers, physical addresses, and the full holding company chain from NIC.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">profile = brr.bank_profile(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_compare(rssd_ids)</div>
+                            <div class="method-desc">
+                                Returns a side-by-side comparison table for up to 10 banks across all key financial ratios. Useful for competitive benchmarking or due diligence.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">cmp = brr.bank_compare(rssd_ids=[37, 852218, 413208])</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.banks(state, tier, q, sort, limit, offset)</div>
+                            <div class="method-desc">
+                                The directory of FDIC-insured banks. Filter by <code>state</code>, asset <code>tier</code>, or a name search <code>q</code>. To compare a known list of banks side by side, use <code>bank_compare()</code>.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">ga = brr.banks(state="GA", limit=100)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Banks: Financial Sub-Books -->
+                    <div id="group-banks-financial" class="method-group section-anchor">
+                        <div class="method-group-label">Banks: Financial Sub-Books</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_deposits(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns deposit composition data including demand deposits (DDA), money market accounts (MMDA), certificates of deposit, brokered deposits, and uninsured deposit percentage.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">dep = brr.bank_deposits(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_securities(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the investment securities portfolio breakdown by held-to-maturity (HTM) and available-for-sale (AFS) categories, including accumulated other comprehensive income (AOCI) and unrealized gains and losses.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">sec = brr.bank_securities(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.loan_portfolio(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns loan book detail segmented by category: commercial real estate (CRE), commercial and industrial (C&amp;I), consumer loans, residential mortgage, and construction and land development.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">loans = brr.loan_portfolio(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_hmda(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns Home Mortgage Disclosure Act (HMDA) data for the bank: mortgage origination volumes, approval and denial rates, and demographic breakdowns by year.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">hmda = brr.bank_hmda(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Banks: Structure & Organization -->
+                    <div id="group-banks-structure" class="method-group section-anchor">
+                        <div class="method-group-label">Banks: Structure &amp; Organization</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_structure(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the NIC organizational structure for a bank, including its parent holding company chain, direct and indirect subsidiaries, and ownership percentages at each level.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">struct = brr.bank_structure(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_events(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns regulatory lifecycle events for a bank: charter grants, mergers and acquisitions, legal name changes, conversions between charter types, and branch openings or closures.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">evts = brr.bank_events(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_history(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the full historical record from the NIC database, including predecessor institutions, historical names, and the complete chain of corporate lineage back to the institution's founding.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">hist = brr.bank_history(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.bank_fry15(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns FR Y-15 systemic importance indicators for institutions that file the report. Includes the eight GSIB indicator categories used to assess global systemic importance.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">y15 = brr.bank_fry15(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Banks: Scores & Peers -->
+                    <div id="group-banks-scores" class="method-group section-anchor">
+                        <div class="method-group-label">Banks: Scores &amp; Peers</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.scorecard(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the BRR proprietary composite score for the bank, broken into five sub-dimensions: safety, growth, credit quality, efficiency, and value. Scores range from 0 to 100 within each asset tier peer group.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">sc = brr.scorecard(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.ranks(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns national peer group percentile ranks for more than 20 financial metrics, letting you see where the bank stands relative to institutions of similar size and charter type.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">r = brr.ranks(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.peer_ranking(rssd_id, metric)</div>
+                            <div class="method-desc">
+                                Returns the bank's percentile rank on one <code>metric</code> (for example <code>"cet1_ratio"</code>, <code>"roa"</code> or <code>"npl_ratio"</code>) within its peer group.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">pr = brr.peer_ranking(rssd_id=37, metric="roa")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.peers(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the peer group definition for a bank: which asset tier bucket it belongs to, charter class, primary operating region, and business model classification used by the BRR scoring engine.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">p = brr.peers(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.peer_comparison(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns a full peer comparison table showing the bank's value for every available metric alongside the peer group median, enabling direct benchmarking across all dimensions.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">pc = brr.peer_comparison(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Branches -->
+                    <div id="group-branches" class="method-group section-anchor">
+                        <div class="method-group-label">Banks: Branches</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.branches(rssd_id, source, rollup, as_map)</div>
+                            <div class="method-desc">
+                                Returns branch network data from FDIC Summary of Deposits (banks) or NCUA branch files (credit unions).
+                                <ul style="margin: 0.5rem 0 0 1.25rem;
+                                           color: var(--color-text-secondary);
+                                           font-size: 0.9rem;
+                                           line-height: 1.7">
+                                    <li>
+                                        <code>source</code>: <code>"fdic"</code> (default) or <code>"ncua"</code>
+                                    </li>
+                                    <li>
+                                        <code>rollup=True</code>: aggregates branch counts by state and county rather than returning individual branch records
+                                    </li>
+                                    <li>
+                                        <code>as_map=True</code>: returns a GeoJSON FeatureCollection suitable for mapping
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python"># Individual branch records
+br = brr.branches(rssd_id=37)
+
+# GeoJSON for mapping
+geo = brr.branches(rssd_id=37, as_map=True)
+
+# State-level rollup
+rollup = brr.branches(rssd_id=37, rollup=True)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Risk & Compliance -->
+                    <div id="group-risk-compliance" class="method-group section-anchor">
+                        <div class="method-group-label">Banks: Risk &amp; Compliance</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.prediction(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the ML-derived failure probability score and component distress indicators for the bank. The model is trained on historical FDIC failure data and regulatory financial ratios.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">pred = brr.prediction(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.enforcement_actions(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns formal enforcement actions from the primary federal regulator: cease-and-desist orders, consent orders, formal agreements, matters requiring attention (MRAs), and civil money penalties.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">ea = brr.enforcement_actions(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.complaints(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns CFPB consumer complaint volumes and category breakdowns for the institution, drawn from the Consumer Financial Protection Bureau's public complaint database.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">comp = brr.complaints(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: SEC / EDGAR -->
+                    <div id="group-sec" class="method-group section-anchor">
+                        <div class="method-group-label">SEC / EDGAR</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_filings(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns all SEC filings for the holding company associated with the bank RSSD ID: annual reports (10-K), quarterly reports (10-Q), current reports (8-K), proxy statements (DEF 14A), and others.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">filings = brr.sec_filings(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_facts(rssd_id, limit, offset)</div>
+                            <div class="method-desc">
+                                Returns XBRL financial facts from the bank's SEC EDGAR filings. Page through long results with <code>limit</code> and <code>offset</code>.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">facts = brr.sec_facts(rssd_id=852218, limit=500)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_8k(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns recent 8-K event summaries for the holding company: earnings releases, leadership changes, material agreements, M&amp;A announcements, and other material events.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">k8 = brr.sec_8k(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_8k_body(accession_number)</div>
+                            <div class="method-desc">
+                                Returns the full parsed body text of a specific 8-K filing identified by its SEC accession number.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">body = brr.sec_8k_body(accession_number="0001234567-24-000001")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_ma(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the M&amp;A deal history sourced from SEC filings, including target and acquirer names, deal value, transaction structure, and current status for each transaction.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">ma = brr.sec_ma(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_officers(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the named executive officers extracted from proxy statements (DEF 14A) and annual reports, including title, appointment date, and biographical summary where available.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">officers = brr.sec_officers(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.executive_comp(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the CEO, CFO, and named executive officer compensation tables from proxy filings, including base salary, bonus, equity grants, and total compensation by year.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">comp = brr.executive_comp(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_restatements(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns any financial restatements filed with the SEC, including the periods restated, the accounting items affected, and the filing date of the restatement.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">rest = brr.sec_restatements(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_insider_txns(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns Form 4 insider transaction records: purchases, sales, and equity grants by named officers and directors, with transaction date, share count, and price per share.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">txns = brr.sec_insider_txns(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_insider_summary(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns aggregated insider buying and selling trend data over a configurable trailing window, summarizing net insider sentiment in dollar and share terms.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">ins = brr.sec_insider_summary(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_filing_velocity(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns filing frequency trend analysis: late filings, amendment patterns, restatement bursts, and other indicators of filing discipline or distress in the SEC record.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">vel = brr.sec_filing_velocity(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_filer_history(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the complete EDGAR filer history for the associated holding company, including CIK number, all former entity names, and any CIK or filer type changes over time.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">fh = brr.sec_filer_history(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_filing_sections(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns parsed sections from a 10-K or 10-Q filing (MD&amp;A, Risk Factors, Controls and Procedures, Financial Statements, and others) for the bank's filings.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">secs = brr.sec_filing_sections(rssd_id=852218)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_13dg(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns Schedule 13D and 13G filings associated with the holding company: activist investor disclosures, institutional ownership threshold crossings, and beneficial ownership changes.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">s13 = brr.sec_13dg(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.sec_13f(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns 13F institutional holdings disclosures for the holding company's investment management arm, showing its portfolio of equity securities reported each quarter.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">s13f = brr.sec_13f(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Screeners -->
+                    <div id="group-screeners" class="method-group section-anchor">
+                        <div class="method-group-label">Screeners</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.screener(**kwargs)</div>
+                            <div class="method-desc">
+                                Filters all FDIC-insured banks by financial criteria. All parameters are optional and can be combined.
+                                <ul style="margin: 0.5rem 0 0 1.25rem;
+                                           color: var(--color-text-secondary);
+                                           font-size: 0.9rem;
+                                           line-height: 1.7">
+                                    <li>
+                                        <code>state</code>: Two-letter state code, e.g. <code>"GA"</code>
+                                    </li>
+                                    <li>
+                                        <code>min_assets</code> / <code>max_assets</code>: Total assets in thousands of dollars
+                                    </li>
+                                    <li>
+                                        <code>min_cet1</code>: Minimum CET1 capital ratio (percent)
+                                    </li>
+                                    <li>
+                                        <code>max_npa</code>: Maximum non-performing asset ratio (percent)
+                                    </li>
+                                    <li>
+                                        <code>asset_tier</code>: Asset size tier: <code>"community"</code>, <code>"midsize"</code>, <code>"large"</code>, <code>"gsib"</code>
+                                    </li>
+                                    <li>
+                                        <code>charter</code>: Charter class code, e.g. <code>"N"</code> (national bank)
+                                    </li>
+                                    <li>
+                                        <code>region</code>: Federal Reserve district code or region name
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">df = brr.screener(state="GA", min_assets=500_000, min_cet1=12.0)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.ma_screener(**kwargs)</div>
+                            <div class="method-desc">
+                                Filters banks by M&amp;A attractiveness signals: price-to-book ratio, tangible book value, excess capital levels, geographic footprint, and strategic fit indicators. Useful for identifying acquisition targets.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">targets = brr.ma_screener(state="TX", max_assets=2_000_000)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.loan_concentration(**kwargs)</div>
+                            <div class="method-desc">
+                                Identifies banks with elevated concentration in specific loan categories relative to risk-based capital. Use <code>min_cre_pct</code> to find banks above the supervisory CRE concentration threshold (300% of risk-based capital).
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">cre = brr.loan_concentration(min_cre_pct=300)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.growth_screener(**kwargs)</div>
+                            <div class="method-desc">
+                                Filters banks by revenue and asset growth trajectories. Supports filtering on year-over-year asset growth, loan growth, deposit growth, and net interest income growth.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">growers = brr.growth_screener(min_asset_growth_yoy=15.0, state="FL")</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Industry & Macro -->
+                    <div id="group-industry" class="method-group section-anchor">
+                        <div class="method-group-label">Industry &amp; Macro</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.industry(trends=False, quarters=20)</div>
+                            <div class="method-desc">
+                                Returns national aggregate Call Report statistics for the banking system for the latest quarter. Pass <code>trends=True</code> for the quarterly time series (last <code>quarters</code> quarters).
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">agg = brr.industry()
+history = brr.industry(trends=True, quarters=8)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.rate_environment()</div>
+                            <div class="method-desc">
+                                Returns the current federal funds rate, SOFR, prime rate, and the recent FOMC rate path showing actual moves and expectations.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">rates = brr.rate_environment()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.national_deposit_rates()</div>
+                            <div class="method-desc">
+                                Returns FDIC national deposit rate averages by product type: savings accounts, interest checking, money market accounts, and certificates of deposit at various maturities.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">dep_rates = brr.national_deposit_rates()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.industry_benchmarks()</div>
+                            <div class="method-desc">
+                                Returns pre-computed peer benchmarks: the mean and a five-number summary of key ratios for each asset-tier peer group.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">bench = brr.industry_benchmarks()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.industry_macro()</div>
+                            <div class="method-desc">
+                                Returns macroeconomic context data relevant to the banking sector: unemployment rate, CPI, household debt service ratios, and senior loan officer survey credit conditions.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">macro = brr.industry_macro()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.peer_groups()</div>
+                            <div class="method-desc">
+                                Returns the full list of peer group definitions used by the BRR scoring engine, including asset tier boundaries, charter groupings, and regional classifications.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">pgs = brr.peer_groups()</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Rates & Yield Curve -->
+                    <div id="group-rates" class="method-group section-anchor">
+                        <div class="method-group-label">Rates &amp; Yield Curve</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.rates(kind)</div>
+                            <div class="method-desc">
+                                Returns a historical rate series. Supported <code>kind</code> values:
+                                <ul style="margin: 0.5rem 0 0 1.25rem;
+                                           color: var(--color-text-secondary);
+                                           font-size: 0.9rem;
+                                           line-height: 1.7">
+                                    <li>
+                                        <code>"fed_funds"</code>: Effective federal funds rate
+                                    </li>
+                                    <li>
+                                        <code>"sofr"</code>: Secured Overnight Financing Rate
+                                    </li>
+                                    <li>
+                                        <code>"prime"</code>: US bank prime lending rate
+                                    </li>
+                                    <li>
+                                        <code>"t2y"</code>: 2-year Treasury constant maturity yield
+                                    </li>
+                                    <li>
+                                        <code>"t10y"</code>: 10-year Treasury constant maturity yield
+                                    </li>
+                                    <li>
+                                        <code>"mortgage_30y"</code>: 30-year fixed mortgage rate (Freddie Mac)
+                                    </li>
+                                    <li>
+                                        <code>"cd_national"</code>: FDIC national average CD rate
+                                    </li>
+                                    <li>
+                                        <code>"savings_national"</code>: FDIC national average savings rate
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">ff = brr.rates(kind="fed_funds")
+t10 = brr.rates(kind="t10y")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.yield_curve(latest, tenor, start_date, end_date)</div>
+                            <div class="method-desc">
+                                Returns the US Treasury yield curve in long form, one row per date and tenor. Pass <code>latest=True</code> for the current curve, <code>tenor="Y10"</code> for one tenor's daily series, and ISO dates in <code>start_date</code> / <code>end_date</code> to bound the range.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">yc = brr.yield_curve(latest=True)
+ten_year = brr.yield_curve(tenor="Y10", start_date="2024-01-01")</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Risk & Failures -->
+                    <div id="group-risk-failures" class="method-group section-anchor">
+                        <div class="method-group-label">Risk &amp; Failures</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.high_risk_banks(**filters)</div>
+                            <div class="method-desc">
+                                Returns the banks the failure-prediction model flags as high risk. Extra keyword arguments are passed to the API as query filters.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">risky = brr.high_risk_banks()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.risk(dashboard=False, model=False)</div>
+                            <div class="method-desc">
+                                Returns the industry risk overview. Pass <code>dashboard=True</code> for the risk dashboard payload or <code>model=True</code> for the prediction model's performance metrics. For one bank, use <code>prediction(rssd_id)</code>.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">overview = brr.risk()
+model_stats = brr.risk(model=True)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.failures()</div>
+                            <div class="method-desc">
+                                Returns the complete historical FDIC bank failure list, including institution name, failure date, acquiring institution, and estimated cost to the Deposit Insurance Fund (DIF).
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">fails = brr.failures()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.events()</div>
+                            <div class="method-desc">
+                                Returns system-wide regulatory events across all institutions: enforcement waves, industry-wide charter changes, and notable supervisory developments.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">evts = brr.events()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.enforcement()</div>
+                            <div class="method-desc">
+                                Returns the aggregate enforcement action feed across all institutions from all federal banking regulators (OCC, FDIC, Federal Reserve, NCUA).
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">enf = brr.enforcement()</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Credit Unions -->
+                    <div id="group-credit-unions" class="method-group section-anchor">
+                        <div class="method-group-label">Credit Unions / NCUA</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.credit_unions(**kwargs)</div>
+                            <div class="method-desc">
+                                Returns the directory of all NCUA-insured credit unions with optional filters. Supports the same filter conventions as the bank screener, including <code>state</code> filtering.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">cus = brr.credit_unions(state="GA")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.credit_union(cu_number)</div>
+                            <div class="method-desc">
+                                Returns the full snapshot of a single credit union identified by its NCUA charter number. Includes financials, capital ratios, membership data, and regulatory information from the 5300 Call Report.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">cu = brr.credit_union(cu_number=68535)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.credit_union_branches(cu_number)</div>
+                            <div class="method-desc">
+                                Returns branch location records for a credit union from NCUA branch data, including address, county, and branch type.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">br = brr.credit_union_branches(cu_number=68535)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.credit_union_atms(cu_number)</div>
+                            <div class="method-desc">
+                                Returns the ATM network associated with a credit union, including shared-branching network participation and surcharge-free ATM locations where available.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">atms = brr.credit_union_atms(cu_number=68535)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.cu_peer_benchmarks()</div>
+                            <div class="method-desc">
+                                Returns credit union peer benchmarks for each asset tier.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">bench = brr.cu_peer_benchmarks()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.ncua_enforcement()</div>
+                            <div class="method-desc">
+                                Returns the aggregate NCUA enforcement action feed across all credit unions, including letters of understanding and agreement, formal orders, and conservatorships.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">enf = brr.ncua_enforcement()</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Holding Companies -->
+                    <div id="group-bhc" class="method-group section-anchor">
+                        <div class="method-group-label">Holding Companies / BHC</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.holding_companies(**kwargs)</div>
+                            <div class="method-desc">
+                                Returns the directory of all Federal Reserve-registered bank holding companies (BHCs) and financial holding companies (FHCs). Supports state and asset size filters.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">bhcs = brr.holding_companies(state="NY")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.holding_company(rssd_id)</div>
+                            <div class="method-desc">
+                                Returns the full BHC profile for a holding company: consolidated Y-9C financial data, direct and indirect subsidiaries, regulatory capital on a consolidated basis, and Federal Reserve supervisory ratings where public.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">bhc = brr.holding_company(rssd_id=1039502)  # JPMorgan Chase &amp; Co.</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Watchlist & Alerts -->
+                    <div id="group-watchlist" class="method-group section-anchor">
+                        <div class="method-group-label">Watchlist &amp; Alerts</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.watchlist()</div>
+                            <div class="method-desc">Returns the current watchlist of saved institutions for the authenticated account.</div>
+                            <div class="method-example">
+                                <pre><code class="language-python">wl = brr.watchlist()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.watchlist_add(rssd_id)</div>
+                            <div class="method-desc">Adds an institution to the account watchlist. Returns the updated watchlist entry.</div>
+                            <div class="method-example">
+                                <pre><code class="language-python">brr.watchlist_add(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.watchlist_remove(rssd_id)</div>
+                            <div class="method-desc">Removes an institution from the account watchlist.</div>
+                            <div class="method-example">
+                                <pre><code class="language-python">brr.watchlist_remove(rssd_id=37)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.alert_list()</div>
+                            <div class="method-desc">Returns all configured metric threshold alerts for the authenticated account.</div>
+                            <div class="method-example">
+                                <pre><code class="language-python">alerts = brr.alert_list()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.alert_create(rssd_id, metric, threshold, direction)</div>
+                            <div class="method-desc">
+                                Creates a metric threshold alert that fires when the specified metric crosses the threshold in the given direction. <code>direction</code> accepts <code>"above"</code> or <code>"below"</code>.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">brr.alert_create(
+    rssd_id=37,
+    metric="cet1_ratio",
+    threshold=10.0,
+    direction="below",
+)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.alert_update(alert_id, is_active)</div>
+                            <div class="method-desc">
+                                Turns an existing alert on or off by its numeric <code>alert_id</code>. To change the threshold, delete the alert and create a new one.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">brr.alert_update(alert_id=42, is_active=False)</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.alert_delete(alert_id)</div>
+                            <div class="method-desc">
+                                Permanently deletes an alert by its numeric <code>alert_id</code>.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">brr.alert_delete(alert_id=42)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Saved Graphs -->
+                    <div id="group-graphs" class="method-group section-anchor">
+                        <div class="method-group-label">Saved Graphs</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.graphs()</div>
+                            <div class="method-desc">Returns all saved chart configurations for the authenticated account.</div>
+                            <div class="method-example">
+                                <pre><code class="language-python">gs = brr.graphs()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.graph(graph_id)</div>
+                            <div class="method-desc">Returns the definition of a single saved graph by its string ID.</div>
+                            <div class="method-example">
+                                <pre><code class="language-python">g = brr.graph(graph_id="abc123")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.graph_create(name, kind, description, config, visibility, template_key)</div>
+                            <div class="method-desc">
+                                Saves a new chart to the account. <code>name</code> and <code>kind</code> are required; <code>config</code> holds the chart definition (metrics, banks, date range) and <code>visibility</code> is <code>"private"</code> or <code>"public"</code>.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">g = brr.graph_create(name="NIM trend", kind="trend", config={"metrics": ["nim"], "banks": [37]})</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.graph_update(graph_id, **kwargs)</div>
+                            <div class="method-desc">Updates one or more properties of an existing saved graph by its string ID.</div>
+                            <div class="method-example">
+                                <pre><code class="language-python">brr.graph_update(graph_id="abc123", title="NIM 12Q")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.graph_delete(graph_id)</div>
+                            <div class="method-desc">Permanently deletes a saved graph by its string ID.</div>
+                            <div class="method-example">
+                                <pre><code class="language-python">brr.graph_delete(graph_id="abc123")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.graph_fork(graph_id)</div>
+                            <div class="method-desc">
+                                Duplicates a graph (including shared public graphs) into the authenticated account under a new ID. Useful for customizing a shared template.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">copy = brr.graph_fork(graph_id="shared_xyz")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.chart_resolve(kind, config)</div>
+                            <div class="method-desc">
+                                Resolves a chart configuration into its data series without saving it. <code>kind</code> is the chart type (for example <code>"trend"</code> or <code>"peer_bar"</code>) and <code>config</code> is a dict of metrics, banks and date range.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">data = brr.chart_resolve(kind="trend", config={"metrics": ["nim"], "banks": [37]})</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Reference & Catalog -->
+                    <div id="group-reference" class="method-group section-anchor">
+                        <div class="method-group-label">Reference &amp; Catalog</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.metrics()</div>
+                            <div class="method-desc">
+                                Returns the full BRR metric catalog: every BRR-M- canonical code with its human-readable name, definition, unit type, MDRM source code, and calculation notes.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">cat = brr.metrics()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.reference(slug, as_of, limit)</div>
+                            <div class="method-desc">
+                                Returns reference data. With no <code>slug</code> it lists the available tables; <code>slug="states"</code>, <code>"regulators"</code> and so on return that table. Pass an MDRM item code as the slug to get its definition, resolved for the <code>as_of</code> date.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">defn = brr.reference(slug="RCON2170")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.datasets_catalog()</div>
+                            <div class="method-desc">
+                                Returns a machine-readable catalog of all available dataset endpoints, including endpoint paths, required parameters, and response schemas.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">dc = brr.datasets_catalog()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.list_datasets()</div>
+                            <div class="method-desc">
+                                Returns a human-readable list of all named reference datasets available through the <code>dataset()</code> method, with short descriptions of each.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">ds = brr.list_datasets()</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.dataset(name)</div>
+                            <div class="method-desc">
+                                Fetches a named reference dataset by name. Available datasets include <code>"charter_codes"</code>, <code>"asset_tiers"</code>, <code>"regulatory_agencies"</code>, <code>"state_codes"</code>, and others returned by <code>list_datasets()</code>.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">charters = brr.dataset(name="charter_codes")</code></pre>
+                            </div>
+                        </div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.healthz()</div>
+                            <div class="method-desc">
+                                Performs a lightweight health check against the API. Returns <code>{"status": "ok"}</code> when the API is reachable and operational. This endpoint is public and does not require authentication.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">brr.healthz()</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- GROUP: Pagination method -->
+                    <div id="group-pagination-method" class="method-group section-anchor">
+                        <div class="method-group-label">Pagination</div>
+                        <div class="method-entry">
+                            <div class="method-signature">brr.pages(name, page_size=50, max_records=None, **kwargs)</div>
+                            <div class="method-desc">
+                                Returns a lazy iterator that pages through any paginated dataset. Pass the dataset name as the first argument and any filter parameters as keyword arguments. Each iteration yields one page as a DataFrame, or as decoded JSON with <code>as_dataframe=False</code>.
+                            </div>
+                            <div class="method-example">
+                                <pre><code class="language-python">for page in brr.pages("screener", page_size=200, state="TX"):
+    process(page)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION 6: Error Handling -->
+                <section id="error-handling" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">Error Handling</h2>
+                    <p class="section-intro">
+                        All SDK errors inherit from <code>BankRegError</code>. Import the specific exception classes from the top-level <code>bankregreports</code> namespace or from <code>bankregreports.exceptions</code>.
+                    </p>
+                    <h3>Exception hierarchy</h3>
+                    <div class="exception-entry">
+                        <div class="exception-name">BankRegError</div>
+                        <div class="exception-desc">
+                            Base exception. Raised for any API or network error not covered by a more specific subclass.
+                        </div>
+                        <div class="exception-attr">
+                            Attributes: <code>status_code</code> (int), <code>message</code> (str), <code>response_body</code> (dict | None)
+                        </div>
+                    </div>
+                    <div class="exception-entry">
+                        <div class="exception-name">AuthenticationError</div>
+                        <div class="exception-meta">
+                            <span class="badge badge-red">401</span>
+                        </div>
+                        <div class="exception-desc">
+                            The API token is missing, malformed, or has been revoked. Check that <code>BANKREG_API_TOKEN</code> is set correctly or that the token passed to the constructor is valid.
+                        </div>
+                    </div>
+                    <div class="exception-entry">
+                        <div class="exception-name">ForbiddenError</div>
+                        <div class="exception-meta">
+                            <span class="badge badge-amber">403</span>
+                        </div>
+                        <div class="exception-desc">
+                            The token is valid but the account does not have permission to access this endpoint. Verify the subscription tier required for the endpoint you are calling.
+                        </div>
+                    </div>
+                    <div class="exception-entry">
+                        <div class="exception-name">NotFoundError</div>
+                        <div class="exception-meta">
+                            <span class="badge badge-gray">404</span>
+                        </div>
+                        <div class="exception-desc">
+                            The requested institution, filing, or resource does not exist in the BRR database. Verify the RSSD ID, CU number, accession number, or other identifier.
+                        </div>
+                    </div>
+                    <div class="exception-entry">
+                        <div class="exception-name">RateLimitError</div>
+                        <div class="exception-meta">
+                            <span class="badge badge-amber">429</span>
+                        </div>
+                        <div class="exception-desc">
+                            The request rate limit for the account tier has been exceeded. The SDK will respect the <code>Retry-After</code> header on automatic retries (see <code>retries</code> configuration). On final failure, this exception is raised.
+                        </div>
+                        <div class="exception-attr">
+                            Extra attribute: <code>retry_after</code> (int): seconds to wait before retrying
+                        </div>
+                    </div>
+                    <div class="exception-entry">
+                        <div class="exception-name">UpgradeRequiredError</div>
+                        <div class="exception-meta">
+                            <span class="badge badge-purple">402</span>
+                        </div>
+                        <div class="exception-desc">
+                            The endpoint or feature requires a higher subscription tier than the current account holds. Upgrade at <a href="https://www.bankregreports.com/api/"
+    target="_blank"
+    rel="noopener">bankregreports.com/api/</a>.
+                        </div>
+                    </div>
+                    <div class="exception-entry">
+                        <div class="exception-name">ServerError</div>
+                        <div class="exception-meta">
+                            <span class="badge badge-red">5xx</span>
+                        </div>
+                        <div class="exception-desc">
+                            An upstream API error occurred. The SDK will automatically retry on 5xx responses according to the <code>retries</code> configuration with exponential backoff.
+                        </div>
+                    </div>
+                    <h3>Full error handling example</h3>
+                    <pre><code class="language-python">import bankregreports
+from bankregreports import (
+    AuthenticationError,
+    ForbiddenError,
+    NotFoundError,
+    RateLimitError,
+    UpgradeRequiredError,
+    BankRegError,
+)
+
+brr = bankregreports.BankReg("brr_xxx")
+
+try:
+    snap = brr.bank(rssd_id=99999999)
+except NotFoundError:
+    print("Bank not found")
+except RateLimitError as e:
+    print(f"Rate limited, retry after {e.retry_after}s")
+except UpgradeRequiredError:
+    print("Upgrade to Pro to access this endpoint")
+except AuthenticationError:
+    print("Check your API token")
+except BankRegError as e:
+    print(f"API error {e.status_code}: {e.message}")</code></pre>
+                </section>
+                <!-- SECTION 7: Pagination -->
+                <section id="pagination" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">Pagination</h2>
+                    <p class="section-intro">
+                        The <code>pages()</code> iterator handles cursor-based pagination transparently. Pass the unbound method reference and any filter keyword arguments; the iterator fetches the next cursor on each call automatically.
+                    </p>
+                    <pre><code class="language-python">import bankregreports
+brr = bankregreports.BankReg("brr_xxx")
+
+# Iterate all Texas banks page by page (memory-efficient)
+for page in brr.pages("screener", page_size=200, state="TX"):
+    for bank in page:
+        print(bank["legal_name"], bank["total_assets"])
+
+# Collect all pages into a single flat list
+# Note: use only for small-to-moderate result sets
+all_banks = [
+    row
+    for page in brr.pages(brr.bank_search_index)
+    for row in page
+]
+print(f"Total banks loaded: {len(all_banks)}")</code></pre>
+                    <div class="callout warning mt-3">
+                        <div class="callout-icon">&#9888;</div>
+                        <div class="callout-body">
+                            <div class="callout-title">Memory consideration</div>
+                            <div class="callout-text">
+                                Collecting all pages into a single list using the list comprehension pattern above loads every result into memory at once. For full bank directories (4,000+ institutions) this is manageable. For high-cardinality endpoints, process row by row within the per-page loop instead.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION 8: Configuration -->
+                <section id="configuration" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">Configuration</h2>
+                    <p class="section-intro">
+                        All configuration is accepted through the <code>BankReg</code> constructor or through environment variables. Constructor arguments take precedence over environment variables.
+                    </p>
+                    <h3>Constructor signature</h3>
+                    <pre><code class="language-python">BankReg(
+    token=None,
+    base_url=None,
+    api_version="v1",
+    timeout=30.0,
+    max_retries=3,
+    session=None,
+)</code></pre>
+                    <h3>Constructor parameters</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Default</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="param-name">token</span>
+                                    </td>
+                                    <td>
+                                        <span class="param-type">str | None</span>
+                                    </td>
+                                    <td>
+                                        <code>None</code>
+                                    </td>
+                                    <td>API key (<code>brr_&hellip;</code>). When <code>None</code>, falls back to the <code>BANKREG_API_TOKEN</code> environment variable. Public-tier datasets work without a key.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="param-name">base_url</span>
+                                    </td>
+                                    <td>
+                                        <span class="param-type">str | None</span>
+                                    </td>
+                                    <td>
+                                        <code>https://api.bankregreports.com</code>
+                                    </td>
+                                    <td>API origin, without the <code>/api/v1</code> path. Falls back to <code>BANKREG_API_BASE_URL</code>, then the production host. You should not need to change it.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="param-name">api_version</span>
+                                    </td>
+                                    <td>
+                                        <span class="param-type">str</span>
+                                    </td>
+                                    <td>
+                                        <code>"v1"</code>
+                                    </td>
+                                    <td>URL path version segment.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="param-name">timeout</span>
+                                    </td>
+                                    <td>
+                                        <span class="param-type">float</span>
+                                    </td>
+                                    <td>
+                                        <code>30.0</code>
+                                    </td>
+                                    <td>Per-request timeout in seconds. A timeout raises <code>APITimeoutError</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="param-name">max_retries</span>
+                                    </td>
+                                    <td>
+                                        <span class="param-type">int</span>
+                                    </td>
+                                    <td>
+                                        <code>3</code>
+                                    </td>
+                                    <td>Automatic retries for GET requests on 429 and 5xx responses and on network errors, with exponential backoff (1, 2, 4 seconds). A 429 waits for the server's <code>Retry-After</code>, capped at 30 seconds per wait. POST, PATCH, PUT and DELETE are never retried.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="param-name">session</span>
+                                    </td>
+                                    <td>
+                                        <span class="param-type">requests.Session | None</span>
+                                    </td>
+                                    <td>
+                                        <code>None</code>
+                                    </td>
+                                    <td>A pre-configured <code>requests.Session</code> to reuse connections or add proxies.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3>Environment variables</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Variable</th>
+                                    <th>Maps to</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <code>BANKREG_API_TOKEN</code>
+                                    </td>
+                                    <td>
+                                        <code>token</code>
+                                    </td>
+                                    <td>API key. The constructor <code>token</code> argument takes precedence.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code>BANKREG_API_BASE_URL</code>
+                                    </td>
+                                    <td>
+                                        <code>base_url</code>
+                                    </td>
+                                    <td>API origin override. The constructor <code>base_url</code> argument takes precedence.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3>Configuration examples</h3>
+                    <pre><code class="language-python">import bankregreports
+
+# Explicit options
+brr = bankregreports.BankReg(
+    "brr_xxx",
+    timeout=60,
+    max_retries=5,
+)
+
+# Everything from the environment: export BANKREG_API_TOKEN=brr_xxx
+brr = bankregreports.BankReg()
+
+# Raw JSON instead of DataFrames, per call
+rows = brr.screener(state="GA", as_dataframe=False)</code></pre>
+                </section>
+                <!-- SECTION 9: Swagger / OpenAPI -->
+                <section id="swagger" class="doc-section section-anchor">
+                    <h2 class="anchor-heading">Swagger / OpenAPI</h2>
+                    <div class="swagger-box">
+                        <h3>Interactive REST documentation</h3>
+                        <p>
+                            The full REST API is documented interactively with Swagger / OpenAPI at <a href="https://api.bankregreports.com/api/v1/docs/"
+    target="_blank"
+    rel="noopener">api.bankregreports.com/api/v1/docs/</a>. Every endpoint, every parameter, and every response schema is documented with live try-it-out functionality. The Python SDK is a thin typed wrapper around this REST API: anything you can call from Python, you can also call directly over HTTP.
+                        </p>
+                        <a class="btn-swagger"
+                           href="https://api.bankregreports.com/api/v1/docs/"
+                           target="_blank"
+                           rel="noopener">Open Swagger UI</a>
+                    </div>
+                    <h3>Direct REST access</h3>
+                    <p class="section-intro" style="margin-top: 1rem;">
+                        If you prefer raw HTTP access, every SDK method maps 1:1 to a REST endpoint. The API uses Django REST Framework token authentication with the <code>Token</code> scheme.
+                    </p>
+                    <pre><code class="language-python">import requests
+resp = requests.get(
+    "https://api.bankregreports.com/api/v1/bank/37/",
+    headers={"Authorization": "Token brr_xxx"},
+)
+print(resp.json())</code></pre>
+                    <div class="callout info">
+                        <div class="callout-icon">&#9432;</div>
+                        <div class="callout-body">
+                            <div class="callout-title">Authentication header format</div>
+                            <div class="callout-text">
+                                The REST API uses the <code>Token</code> prefix (not <code>Bearer</code>): <code>Authorization: Token brr_xxx</code>. The Python SDK handles this automatically.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Footer -->
+                <footer>
+                    <div class="footer-inner">
+                        <div class="footer-grid">
+                            <div>
+                                <span class="footer-brand">BankRegReports</span>
+                                <p class="footer-tagline">
+                                    Regulatory and financial data on every US bank, credit union, and holding company. Sourced from FFIEC, FDIC, NCUA, Federal Reserve, and SEC EDGAR.
+                                </p>
+                            </div>
+                            <ul class="footer-links">
+                                <li>
+                                    <a href="https://www.bankregreports.com" target="_blank" rel="noopener">Main Site</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.bankregreports.com/api/"
+                                       target="_blank"
+                                       rel="noopener">API Docs</a>
+                                </li>
+                                <li>
+                                    <a href="https://api.bankregreports.com/api/v1/docs/"
+                                       target="_blank"
+                                       rel="noopener">Swagger</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.bankregreports.com/accounts/signup/"
+                                       target="_blank"
+                                       rel="noopener">Sign Up</a>
+                                </li>
+                                <li>
+                                    <a href="mailto:admin@bankregreports.com">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="footer-bottom">
+                            <span class="footer-copy">Copyright 2024–2026 BankRegReports LLC. All rights reserved.</span>
+                            <span class="footer-sources">Data sourced from FFIEC, FDIC, NCUA, Federal Reserve, SEC EDGAR. Built with the BankRegReports Platform.</span>
+                        </div>
+                    </div>
+                </footer>
+            </main>
+        </div>
+        <!-- Prism.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+        <script>
+(function () {
+  'use strict';
+
+  // Hamburger / sidebar toggle
+  var hamburger = document.getElementById('hamburger');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebar-overlay');
+  var hamIcon = document.getElementById('ham-icon');
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    overlay.classList.add('active');
+    hamburger.setAttribute('aria-expanded', 'true');
+    // Switch to X icon
+    hamIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+  }
+
+  hamburger.addEventListener('click', function () {
+    if (sidebar.classList.contains('open')) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  });
+
+  overlay.addEventListener('click', closeSidebar);
+
+  // Close sidebar when a sidebar link is clicked on mobile
+  var sidebarLinks = sidebar.querySelectorAll('.sidebar-link');
+  sidebarLinks.forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (window.innerWidth < 769) {
+        closeSidebar();
+      }
+    });
+  });
+
+  // Active section highlighting via IntersectionObserver
+  var allSections = document.querySelectorAll('.section-anchor, .method-group');
+  var navLinks = document.querySelectorAll('.sidebar-link[href^="#"]');
+
+  var activeId = null;
+
+  function setActiveLink(id) {
+    if (id === activeId) return;
+    activeId = id;
+    navLinks.forEach(function (link) {
+      var href = link.getAttribute('href');
+      if (href === '#' + id) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  // Build a map of section id → top offset for simpler tracking
+  function getVisibleSection() {
+    var scrollY = window.scrollY + 80; // account for navbar + buffer
+    var sections = Array.from(document.querySelectorAll('[id]')).filter(function (el) {
+      return el.id && el.classList.contains('section-anchor') || el.classList.contains('method-group');
+    });
+
+    // Filter to only those with matching nav links
+    var navIds = Array.from(navLinks).map(function (l) {
+      return l.getAttribute('href').replace('#', '');
+    });
+
+    var candidates = Array.from(document.querySelectorAll('[id]')).filter(function (el) {
+      return navIds.includes(el.id);
+    });
+
+    var current = null;
+    for (var i = 0; i < candidates.length; i++) {
+      var el = candidates[i];
+      var top = el.getBoundingClientRect().top + window.scrollY;
+      if (top <= scrollY) {
+        current = el.id;
+      }
+    }
+    return current;
+  }
+
+  function onScroll() {
+    var id = getVisibleSection();
+    if (id) setActiveLink(id);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // run once on load
+
+  // Smooth scroll offset correction for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    anchor.addEventListener('click', function (e) {
+      var targetId = this.getAttribute('href').substring(1);
+      var target = document.getElementById(targetId);
+      if (target) {
+        e.preventDefault();
+        var navHeight = document.querySelector('.navbar').offsetHeight;
+        var targetTop = target.getBoundingClientRect().top + window.scrollY - navHeight - 20;
+        window.scrollTo({ top: targetTop, behavior: 'smooth' });
+        // Update URL without triggering native scroll
+        history.pushState(null, '', '#' + targetId);
+      }
+    });
+  });
+
+})();
+        </script>
+    </body>
+</html>

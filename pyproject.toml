@@ -1,0 +1,106 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bankregreports"
+dynamic = ["version"]
+description = "Python client for the BankRegReports Data API: regulatory data on every US bank, credit union, and holding company."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "BankRegReports LLC", email = "admin@bankregreports.com" }]
+requires-python = ">=3.10"
+dependencies = ["requests>=2.25"]
+keywords = [
+    "banking",
+    "bank-regulatory-data",
+    "fdic",
+    "ffiec",
+    "call-report",
+    "ubpr",
+    "ncua",
+    "regulatory-data",
+    "financial-data",
+    "bank-data",
+    "fintech",
+    "pandas",
+    "api-client",
+    "us-banks",
+    "holding-company",
+    "credit-union",
+    "risk",
+    "sec-edgar",
+    "community-banking",
+    "bank-failure-prediction",
+    "cecl",
+    "alco",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+
+[project.optional-dependencies]
+pandas = ["pandas>=1.3"]
+dev   = ["pytest>=7", "ruff>=0.6", "mypy>=1.8", "pip-audit>=2.7"]
+
+[project.urls]
+Homepage      = "https://www.bankregreports.com"
+Documentation = "https://www.bankregreports.com/api/"
+"API Docs"    = "https://api.bankregreports.com/api/v1/docs/"
+"API Sign-up" = "https://www.bankregreports.com/api/"
+Source        = "https://github.com/BankRegReports-LLC/python-api"
+Changelog     = "https://github.com/BankRegReports-LLC/python-api/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+packages = ["bankregreports"]
+
+[tool.setuptools.dynamic]
+version = { attr = "bankregreports.__version__" }
+
+[tool.setuptools.package-data]
+bankregreports = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["tests_*.py"]
+
+# Lint rules are pinned here so CI and a contributor's machine agree. Without a
+# config, ruff runs a small default rule set and "ruff clean" means little.
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RUF"]
+ignore = [
+    # Explicit Optional/Dict spellings are kept on purpose: rewriting every
+    # annotation for the 3.10 floor is churn with no runtime benefit.
+    "UP006",
+    "UP007",
+    "UP045",
+]
+
+[tool.mypy]
+# Matches requires-python.
+python_version = "3.10"
+strict = false
+warn_unused_ignores = true
+warn_return_any = true
+
+[[tool.mypy.overrides]]
+module = ["pandas", "pandas.*"]
+ignore_missing_imports = true

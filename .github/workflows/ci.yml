@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  # PR/branch checks: a newer commit supersedes the old answer, so cancel.
+  group: python-api-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    # Only run on GitHub-hosted runners when the repo is PUBLIC (Actions minutes
+    # are unlimited for public repos). While the repo is PRIVATE this job is
+    # skipped — the org's free minutes are exhausted, so a hosted run would fail
+    # with a billing error instead of testing anything. Tests still run locally
+    # and via `workflow_dispatch`. No change needed when flipping to public.
+    if: ${{ github.event_name == 'workflow_dispatch' || !github.event.repository.private }}
+    runs-on: ${{ matrix.os }}
+    # Bounded 2026-08-09 (compute audit): observed p95 ~1 min. Without an
+    # explicit cap a wedged job runs to GitHub's 360-minute default.
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep in step with requires-python in pyproject.toml (floor 3.10).
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[pandas,dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Types
+        run: mypy bankregreports
+
+      - name: Tests
+        run: pytest tests_bankregreports.py -q
+
+  audit:
+    if: ${{ github.event_name == 'workflow_dispatch' || !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    # Bounded 2026-08-09 (compute audit): observed p95 ~1 min. Without an
+    # explicit cap a wedged job runs to GitHub's 360-minute default.
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[pandas,dev]"
+      - name: Known vulnerabilities in the dependency tree
+        run: pip-audit --strict --progress-spinner off

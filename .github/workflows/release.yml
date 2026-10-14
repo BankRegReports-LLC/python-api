@@ -1,0 +1,98 @@
+name: Release
+
+# Publishes to PyPI via Trusted Publishing (OpenID Connect). No API token is
+# stored anywhere: PyPI verifies a short-lived OIDC identity naming this repo,
+# this workflow file, and the `pypi` environment. Rotating or leaking a token
+# stops being possible because there is no token.
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  # Publishing to PyPI is not repeatable for a given version. Serialise, and
+# never cancel a release that may already have uploaded an artifact.
+  group: python-api-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Bounded 2026-08-09 (compute audit): observed p95 ~1 min. Without an
+    # explicit cap a wedged job runs to GitHub's 360-minute default.
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # A tag that disagrees with __version__ would publish the wrong version
+      # under the right name, and PyPI versions cannot be reused once taken.
+      - name: Tag must match __version__
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(python -c 'import bankregreports as b; print(b.__version__)')"
+          echo "tag=$tag package=$pkg"
+          if [ "$tag" != "$pkg" ]; then
+            echo "::error::tag v$tag does not match __version__ $pkg"
+            exit 1
+          fi
+
+      - name: Build sdist and wheel
+        run: pipx run build
+
+      - name: Check metadata renders on PyPI
+        run: pipx run twine check --strict dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  pypi:
+    needs: build
+    runs-on: ubuntu-latest
+    # Bounded 2026-08-09 (compute audit): observed p95 ~1 min. Without an
+    # explicit cap a wedged job runs to GitHub's 360-minute default.
+    timeout-minutes: 15
+    # The environment is the actual gate. Add required reviewers to it in repo
+    # settings so a tag push alone cannot publish without a human approving.
+    environment:
+      name: pypi
+      url: https://pypi.org/p/bankregreports
+    permissions:
+      id-token: write   # required: mints the OIDC token PyPI verifies
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    needs: pypi
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    # Bounded 2026-08-09 (compute audit): observed p95 ~1 min. Without an
+    # explicit cap a wedged job runs to GitHub's 360-minute default.
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes
